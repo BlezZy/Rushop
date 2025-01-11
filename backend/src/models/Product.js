@@ -38,13 +38,12 @@ const productSchema = new mongoose.Schema({
         required: true,
         minLength: 2,
         maxLength: 64,
-        unique: true,
     },
     createdAt: {
         type: Date,
         default: Date.now
     }
-})
+}, {versionKey: false})
 
 const product = mongoose.model('Product', productSchema);
 

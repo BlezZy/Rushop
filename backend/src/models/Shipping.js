@@ -21,7 +21,7 @@ const shippingSchema = new mongoose.Schema({
         default: Date.now
     }
 
-})
+}, {versionKey: false})
 
 const shipping = mongoose.model('Shipping', shippingSchema);
 
