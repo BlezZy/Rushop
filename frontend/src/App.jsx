@@ -1,8 +1,9 @@
+import './styles/style.css'
 
 function App() {
   return (
     <>
-        <h1>Witaj</h1>
+        <h1 className="text-green-600">Witaj</h1>
     </>
   )
 }
