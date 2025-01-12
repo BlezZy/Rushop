@@ -21,7 +21,7 @@ const shippingAddressSchema = new mongoose.Schema({
         minLength: 1,
         maxLength: 64
     },
-    zipcode: {
+    zipCode: {
         type: String,
         required: true,
         minLength: 5,

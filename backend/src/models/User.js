@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 8,
-        maxLength: 30
+        maxLength: 64
     },
     name: {
         type: String,
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         minLength: 3,
         maxLength: 64,
     },
-    address: {
+    addresses: {
         type: [
             {
                 street: {
@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema({
                     minLength: 1,
                     maxLength: 64
                 },
-                zipcode: {
+                zipCode: {
                     type: String,
                     required: true,
                     minLength: 5,

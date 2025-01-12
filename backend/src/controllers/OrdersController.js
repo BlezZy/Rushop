@@ -57,7 +57,7 @@ const updateOrder = async (req, res) => {
         if (!updatedOrder) {
             return res.status(404).json({message: 'Request body empty'})
         }
-        const updateOrder= await Order.findByIdAndUpdate(id)
+        const updateOrder= await Order.findByIdAndUpdate(id, updatedOrder)
         return res.status(200).json(updateOrder)
 
     }

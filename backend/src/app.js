@@ -5,6 +5,8 @@ const connectDB = require('./config/db')
 const ProductsRoutes = require('./routes/ProductsRoutes')
 const CategoriesRoutes = require('./routes/CategoriesRoutes')
 const OrdersRoutes = require('./routes/OrdersRoutes')
+const AuthRoutes = require('./routes/AuthRoutes')
+const UsersRoutes = require('./routes/UsersRoutes')
 const app = express();
 const port = 5000;
 
@@ -18,6 +20,8 @@ connectDB()
 app.use('/api/products', ProductsRoutes)
 app.use('/api/categories', CategoriesRoutes)
 app.use('/api/orders', OrdersRoutes)
+app.use('/auth', AuthRoutes)
+app.use('/users', UsersRoutes)
 
 
 app.listen(port, () => {
