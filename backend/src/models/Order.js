@@ -6,26 +6,26 @@ const shippingAddressSchema = new mongoose.Schema({
     street: {
         type: String,
         required: true,
-        minLength: 1,
-        maxLength: 64
+        minlength: 1,
+        maxlength: 64
     },
     city: {
         type: String,
         required: true,
-        minLength: 1,
-        maxLength: 64
+        minlength: 1,
+        maxlength: 64
     },
     country: {
         type: String,
         required: true,
-        minLength: 1,
-        maxLength: 64
+        minlength: 1,
+        maxlength: 64
     },
     zipCode: {
         type: String,
         required: true,
-        minLength: 5,
-        maxLength: 5
+        minlength: 5,
+        maxlength: 5
     }
 }, {versionKey: false})
 
@@ -60,7 +60,8 @@ const orderSchema = new mongoose.Schema({
     totalPrice: {
         type: Number,
         required: true,
-        min: 0
+        min: 0,
+        immutable: true
     },
     shippingId: {
         type: mongoose.Schema.Types.ObjectId,

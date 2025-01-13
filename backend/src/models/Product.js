@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
-        maxLength: 300
+        maxlength: 300
     },
     price: {
         type: Number,
@@ -36,8 +36,8 @@ const productSchema = new mongoose.Schema({
     producer: {
         type: String,
         required: true,
-        minLength: 2,
-        maxLength: 64,
+        minlength: 2,
+        maxlength: 64,
     },
     createdAt: {
         type: Date,

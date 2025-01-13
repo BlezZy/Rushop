@@ -15,7 +15,7 @@ const notificationSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 5,
-        maxLength: 255
+        maxlength: 255
     },
     read: {
         type: Boolean,

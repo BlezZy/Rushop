@@ -58,6 +58,11 @@ const updateOrder = async (req, res) => {
             return res.status(404).json({message: 'Request body empty'})
         }
         const updateOrder= await Order.findByIdAndUpdate(id, updatedOrder)
+
+        if (!updateOrder) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
         return res.status(200).json(updateOrder)
 
     }

@@ -11,20 +11,20 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minLength: 8,
-        maxLength: 64
+        minlength: 8,
+        maxlength: 64
     },
     name: {
         type: String,
         required: true,
-        minLength: 3,
-        maxLength: 64,
+        minlength: 3,
+        maxlength: 64,
     },
     surname: {
         type: String,
         required: true,
-        minLength: 3,
-        maxLength: 64,
+        minlength: 3,
+        maxlength: 64,
     },
     addresses: {
         type: [
@@ -32,26 +32,26 @@ const userSchema = new mongoose.Schema({
                 street: {
                     type: String,
                     required: true,
-                    minLength: 1,
-                    maxLength: 64
+                    minlength: 1,
+                    maxlength: 64
                 },
                 city: {
                     type: String,
                     required: true,
-                    minLength: 1,
-                    maxLength: 64
+                    minlength: 1,
+                    maxlength: 64
                 },
                 country: {
                     type: String,
                     required: true,
-                    minLength: 1,
-                    maxLength: 64
+                    minlength: 1,
+                    maxlength: 64
                 },
                 zipCode: {
                     type: String,
                     required: true,
-                    minLength: 5,
-                    maxLength: 5
+                    minlength: 5,
+                    maxlength: 5
                 }
 
             }

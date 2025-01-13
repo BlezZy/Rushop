@@ -20,8 +20,8 @@ const reviewSchema = new mongoose.Schema({
     comment: {
         type: String,
         required: true,
-        minLength: 5,
-        maxLength: 128
+        minlength: 5,
+        maxlength: 128
     },
     date: {
         type: Date,
