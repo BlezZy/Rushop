@@ -1,5 +1,6 @@
 const Product = require('../models/Product')
-
+const mongoose = require('mongoose');
+const Category = require('../models/Category');
 
 
 const getAllProducts = async (req, res) => {
@@ -97,6 +98,57 @@ const deleteProduct = async (req, res) => {
     }
 }
 
+const searchProducts = async (req, res) => {
+    try {
+        const { category, name, producer, minPrice, maxPrice } = req.query;
+
+        const filter = {};
+
+        if (category) {
+            const categoryData = await Category.findOne({ name: { $regex: category, $options: 'i' } });
+            if (!categoryData) {
+                return res.status(404).json({ error: "Category not found" });
+            }
+            filter.categoryId = categoryData._id;
+        }
+
+        if (name) {
+            filter.name = { $regex: name, $options: 'i' };
+        }
+
+        if (producer) {
+            filter.producer = { $regex: producer, $options: 'i' };
+        }
+
+        if (minPrice || maxPrice) {
+            filter.price = {};
+            if (minPrice) {
+                if (isNaN(minPrice)) {
+                    return res.status(400).json({ error: "minPrice must be a valid number" });
+                }
+                filter.price.$gte = Number(minPrice);
+            }
+            if (maxPrice) {
+                if (isNaN(maxPrice)) {
+                    return res.status(400).json({ error: "maxPrice must be a valid number" });
+                }
+                filter.price.$lte = Number(maxPrice);
+            }
+        }
+
+        const products = await Product.find(filter).populate('categoryId', 'name');
+
+        if (products.length === 0) {
+            return res.status(404).json({ error: "No products found matching the criteria" });
+        }
+
+        return res.status(200).json(products);
+    } catch (error) {
+        console.error("Error searching products:", error);
+        return res.status(400).json(error);
+    }
+};
+
 
 
 module.exports = {
@@ -104,5 +156,6 @@ module.exports = {
     getProductById,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchProducts
 }
