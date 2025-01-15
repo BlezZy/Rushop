@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Cart = require('../models/Cart');
 
 const registerUser = async (req, res) => {
     try {
@@ -22,8 +23,12 @@ const registerUser = async (req, res) => {
             addresses,
             role: 'user'
         })
-        await newUser.save()
-        return res.status(201).json({message: "User registered successfully."})
+        const savedUser = await newUser.save()
+
+        const newCart = new Cart({userId: savedUser._id})
+        await newCart.save()
+
+        return res.status(201).json({message: "User registered and cart created successfully."})
     }
     catch (error) {
         console.error("Error during registration", error)
@@ -49,6 +54,21 @@ const getUserProfileById = async (req, res) => {
     catch (error) {
         console.error("Error fetching user profile", error)
         return res.status(500).json(error)
+    }
+}
+
+const getAllUsers = async (req, res) => {
+    try {
+        const allUsers = await User.find()
+
+        if (!allUsers) {
+            return res.status(404).json({error: "Users not found"})
+        }
+
+        return res.status(200).json(allUsers)
+    }
+    catch (error) {
+        return res.status(400).json(error)
     }
 }
 
@@ -86,6 +106,8 @@ const deleteUserProfile = async (req, res) => {
         if (!deletedUser) {
             return res.status(404).json({error: "User not found"})
         }
+
+        await Cart.findOneAndDelete({userId: id})
 
         return res.status(200).json({message: "User deleted successfully."})
 
@@ -218,6 +240,7 @@ const deleteUserAddress = async (req, res) => {
 module.exports = {
     registerUser,
     getUserProfileById,
+    getAllUsers,
     updateUserProfile,
     deleteUserProfile,
     getUserAddresses,

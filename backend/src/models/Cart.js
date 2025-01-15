@@ -7,6 +7,7 @@ const cartSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
+        unique: true
     },
     items: {
         type: [
@@ -22,7 +23,6 @@ const cartSchema = new mongoose.Schema({
         required: true,
         min: 0,
         default: 0,
-        immutable: true,
     },
     createdAt: {
         type: Date,
