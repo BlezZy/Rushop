@@ -31,6 +31,27 @@ const getOrderById = async (req, res) => {
     }
 }
 
+const getOrderByUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required.' });
+        }
+
+        const userOrders = await Order.find({ userId });
+
+        if (!userOrders || userOrders.length === 0) {
+            return res.status(404).json({ message: 'No orders found for this user.' });
+        }
+
+        return res.status(200).json(userOrders);
+    } catch (err) {
+        console.error("Error fetching orders by user ID:", err);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
 const addOrder = async (req, res) => {
     try {
         const order = req.body
@@ -105,5 +126,6 @@ module.exports = {
     getOrderById,
     addOrder,
     updateOrder,
-    cancelOrder
+    cancelOrder,
+    getOrderByUserId
 }

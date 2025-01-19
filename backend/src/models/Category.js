@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const pathGeneration = require('../middlewares/pathGeneration')
 
 const categorySchema = new mongoose.Schema({
     name: {
@@ -14,17 +13,12 @@ const categorySchema = new mongoose.Schema({
         ref: 'Category',
         default: null
     },
-    path: {
-        type: String,
-        required: false
-    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 }, {versionKey: false})
 
-pathGeneration(categorySchema)
 
 const category = mongoose.model('Category', categorySchema);
 

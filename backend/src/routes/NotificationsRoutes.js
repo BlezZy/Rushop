@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const NotificationsController = require('../controllers/NotificationsController');
-const checkAdminRole = require('../middlewares/checkAdminRole')
+const checkAdminPermission = require('../middlewares/checkAdminPermission')
 const verifyToken = require('../middlewares/verifyToken')
 
 
 router.use(verifyToken);
 
 router.get('/', NotificationsController.getNotifications);
-router.post('/', checkAdminRole, NotificationsController.createNotification);
+router.post('/', checkAdminPermission, NotificationsController.createNotification);
 router.put('/:id', NotificationsController.markAsRead)
-router.delete('/:id', checkAdminRole, NotificationsController.deleteNotification);
+router.delete('/:id', checkAdminPermission, NotificationsController.deleteNotification);
 
 module.exports = router

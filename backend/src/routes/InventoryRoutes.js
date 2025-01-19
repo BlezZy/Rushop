@@ -2,10 +2,10 @@ const express = require('express')
 const router = express.Router()
 const InventoryController = require('../controllers/InventoryController')
 const UpdateInventoryController = require("../controllers/InventoryController");
-const checkAdminRole = require('../middlewares/checkAdminRole')
+const checkAdminPermission = require('../middlewares/checkAdminPermission')
 const verifyToken = require('../middlewares/verifyToken')
 
-router.use(verifyToken, checkAdminRole)
+router.use(verifyToken, checkAdminPermission)
 
 router.get('/', InventoryController.getInventory)
 router.get('/:id', InventoryController.getInventoryById)

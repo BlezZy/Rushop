@@ -1,4 +1,4 @@
-const checkAdminRole = (req, res, next) => {
+const checkAdminPermission = (req, res, next) => {
     try {
         const user = req.user;
         if (!user || user.role !== 'admin') {
@@ -11,4 +11,4 @@ const checkAdminRole = (req, res, next) => {
     }
 };
 
-module.exports = checkAdminRole;
+module.exports = checkAdminPermission;

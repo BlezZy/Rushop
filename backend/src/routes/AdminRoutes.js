@@ -3,11 +3,11 @@ const router = express.Router()
 const ProductsController = require('../controllers/ProductsController')
 const UsersController = require('../controllers/UsersController')
 const verifyToken = require('../middlewares/verifyToken')
-const checkAdminRole = require('../middlewares/checkAdminRole')
+const checkAdminPermission = require('../middlewares/checkAdminPermission')
 
 
 router.use(verifyToken);
-router.use(checkAdminRole);
+router.use(checkAdminPermission);
 
 router.get('/users', UsersController.getAllUsers)
 router.get('/users/:id', UsersController.getUserProfileById)

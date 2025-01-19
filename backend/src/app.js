@@ -17,7 +17,7 @@ const AdminRoutes = require('./routes/AdminRoutes')
 const trimRequestBody = require('./middlewares/trimRequestBody');
 const CartRoutes = require('./routes/CartRoutes');
 const app = express();
-const port = 5000;
+const port = 3000;
 
 app.use(cors());
 app.use(express.json())
@@ -30,11 +30,7 @@ app.use(morgan('dev'));
 
 connectDB()
 
-app.use('/api/products', ProductsRoutes)
-app.use('/api/categories', CategoriesRoutes)
-app.use('/api/orders', OrdersRoutes)
-app.use('/auth', AuthRoutes)
-app.use('/users', UsersRoutes)
+
 app.use('/api/shippings', ShippingsRoutes)
 app.use('/api/discounts', DiscountsRoutes)
 app.use('/api/reviews', ReviewsRoutes)
@@ -42,6 +38,12 @@ app.use('/api/inventory', InventoryRoutes)
 app.use('/api/notifications', NotificationsRoutes)
 app.use('/api/carts', CartRoutes)
 app.use('/api/admin', AdminRoutes)
+app.use('/api/products', ProductsRoutes)
+app.use('/api/categories', CategoriesRoutes)
+app.use('/api/orders', OrdersRoutes)
+app.use('/auth', AuthRoutes)
+app.use('/users', UsersRoutes)
+
 
 app.listen(port, () => {
     console.log(`Server działa na porcie: ${port}`)
