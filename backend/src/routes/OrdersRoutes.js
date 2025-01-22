@@ -7,11 +7,12 @@ const verifyToken = require('../middlewares/verifyToken')
 router.use(verifyToken);
 
 router.get('/', checkAdminPermission, OrdersController.getAllOrders)
+router.get('/user', OrdersController.getAllOrdersByUserId)
 router.get('/:id', OrdersController.getOrderById)
-router.get('/user/:userId', OrdersController.getOrderByUserId)
 router.post('/', OrdersController.addOrder)
 router.put('/:id', checkAdminPermission, OrdersController.updateOrder)
-router.patch('/:id', OrdersController.cancelOrder)
+router.put('/:id/confirm', OrdersController.confirmOrder)
+router.patch('/:id/cancel', OrdersController.cancelOrder)
 
 
 

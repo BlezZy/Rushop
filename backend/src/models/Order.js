@@ -38,7 +38,11 @@ const orderItemSchema = new mongoose.Schema({
     quantity: {
         type: Number,
         required: true,
-        min: 1
+        min: 1,
+        validate: {
+            validator: Number.isInteger,
+            message: "Number must be a integer"
+        }
     },
     price: {
         type: Number,
@@ -71,7 +75,7 @@ const orderSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: ['pending', 'shipped', 'delivered', 'cancelled'],
+        enum: ['pending', 'shipped', 'delivered', 'cancelled', 'ordered'],
         default: 'pending'
     },
     paymentMethod: {
@@ -92,7 +96,8 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-}, {versionKey: false})
+}, { versionKey: false });
+
 
 
 calculateTotalPrice(orderSchema)

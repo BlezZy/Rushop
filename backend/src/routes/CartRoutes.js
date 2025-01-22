@@ -5,10 +5,10 @@ const verifyToken = require('../middlewares/verifyToken')
 
 router.use(verifyToken)
 
-router.get('/:userId', CartController.getCart);
-router.post('/:userId/items', CartController.addItemToCart);
-router.delete('/:userId/items', CartController.removeItemFromCart);
-router.delete('/:userId', CartController.clearCart);
+router.get('/cart', CartController.getCart);
+router.post('/cart/items', CartController.addItemToCart);
+router.delete('/cart/items', CartController.removeItemFromCart);
+router.delete('/cart', CartController.clearCart);
 
 
 module.exports = router;

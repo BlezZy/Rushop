@@ -1,23 +1,18 @@
-const express = require('express')
-const router = express.Router()
-const ProductsController = require('../controllers/ProductsController')
-const UsersController = require('../controllers/UsersController')
-const verifyToken = require('../middlewares/verifyToken')
-const checkAdminPermission = require('../middlewares/checkAdminPermission')
-
+const express = require('express');
+const router = express.Router();
+const AdminController = require('../controllers/AdminController');
+const verifyToken = require('../middlewares/verifyToken');
+const checkAdminPermission = require('../middlewares/checkAdminPermission');
 
 router.use(verifyToken);
 router.use(checkAdminPermission);
 
-router.get('/users', UsersController.getAllUsers)
-router.get('/users/:id', UsersController.getUserProfileById)
-router.delete('/users/:id', UsersController.deleteUserProfile)
+router.get('/users', AdminController.getAllUsers);
+router.get('/users/:id', AdminController.getUserById);
+router.delete('/users/:id', AdminController.deleteUserById);
 
-router.get('/products', ProductsController.getAllProducts)
-router.post('/products', ProductsController.addProduct)
-router.put('/products/:id', ProductsController.updateProduct)
-router.delete('/products/:id', ProductsController.deleteProduct)
-
-
-
-module.exports = router
+router.get('/products', AdminController.getAllProducts);
+router.post('/products', AdminController.addProduct);
+router.put('/products/:id', AdminController.updateProduct);
+router.delete('/products/:id', AdminController.deleteProduct);
+module.exports = router;

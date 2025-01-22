@@ -13,7 +13,11 @@ const cartSchema = new mongoose.Schema({
         type: [
             {
                 productId: {type: mongoose.Schema.Types.ObjectId, ref: 'Product' ,required: true},
-                quantity: {type: Number, required: true, min:1},
+                quantity: {type: Number, required: true, min:1,
+                    validate: {
+                        validator: Number.isInteger,
+                        message: "Number must be a integer"
+                    }},
                 price: {type: Number, required: true, min:0},
             }
         ]

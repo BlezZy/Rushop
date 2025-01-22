@@ -3,16 +3,15 @@ const Cart = require('../models/Cart');
 
 const registerUser = async (req, res) => {
     try {
-        const {email, password, name, surname, addresses} = req.body;
+        const { email, password, name, surname, addresses } = req.body;
 
         if (!email || !password || !name || !surname || !addresses) {
-            return res.status(400).json({ error: 'All fields are required' });
+            return res.status(400).json({ error: 'All fields are required.' });
         }
 
-        const existingUser = await User.findOne({email})
-
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({error: 'User already exists'})
+            return res.status(400).json({ error: 'User already exists.' });
         }
 
         const newUser = new User({
@@ -21,178 +20,118 @@ const registerUser = async (req, res) => {
             name,
             surname,
             addresses,
-            role: 'user'
-        })
-        const savedUser = await newUser.save()
+            role: 'user',
+        });
 
-        const newCart = new Cart({userId: savedUser._id})
-        await newCart.save()
+        const savedUser = await newUser.save();
 
-        return res.status(201).json({message: "User registered and cart created successfully."})
+        const newCart = new Cart({ userId: savedUser._id });
+        await newCart.save();
+
+        return res.status(201).json({ message: 'User registered successfully.' });
+    } catch (error) {
+        console.error('Error during registration:', error);
+        return res.status(500).json({ error: 'Internal server error.' });
     }
-    catch (error) {
-        console.error("Error during registration", error)
-        return res.status(500).json(error)
-    }
-}
+};
 
-const getUserProfileById = async (req, res) => {
+const getUserProfile = async (req, res) => {
     try {
-        const id = req.params.id;
-
-        if(!id) {
-            return res.status(404).json({error: "ID not found"})
-        }
-
-        const user = await User.findById(id).select('-password');
-
+        const userId = req.user.id;
+        const user = await User.findById(userId).select('-password');
         if (!user) {
-            return res.status(404).json({error: "User not found"})
+            return res.status(404).json({ error: 'User not found.' });
         }
-        return res.status(200).json({user})
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
-    catch (error) {
-        console.error("Error fetching user profile", error)
-        return res.status(500).json(error)
-    }
-}
-
-const getAllUsers = async (req, res) => {
-    try {
-        const allUsers = await User.find()
-
-        if (!allUsers) {
-            return res.status(404).json({error: "Users not found"})
-        }
-
-        return res.status(200).json(allUsers)
-    }
-    catch (error) {
-        return res.status(400).json(error)
-    }
-}
+};
 
 const updateUserProfile = async (req, res) => {
     try {
-        const id = req.params.id;
-        const {email, name, surname} = req.body;
+        const userId = req.user.id;
+        const { email, name, surname } = req.body;
 
-        if (!id) {
-            return res.status(404).json({error: "ID not found"})
+        const updatedUser = await User.findByIdAndUpdate(userId, { email, name, surname }, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found.' });
         }
-
-        const user = await User.findByIdAndUpdate(id, {email, name, surname})
-        if (!user) {
-            return res.status(404).json({error: "User not found"})
-        }
-        return res.status(200).json({message: "User updated successfully."})
+        return res.status(200).json({ message: 'User profile updated successfully.', user: updatedUser });
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
-    catch (error) {
-        console.error("Error updating user profile", error);
-        res.status(500).json(error);
-    }
-}
+};
 
 const deleteUserProfile = async (req, res) => {
     try {
-        const id = req.params.id;
-
-        if (!id) {
-            return res.status(404).json({error: "ID not found"})
-        }
-
-        const deletedUser = await User.findByIdAndDelete(id)
-
+        const userId = req.user.id;
+        const deletedUser = await User.findByIdAndDelete(userId);
         if (!deletedUser) {
-            return res.status(404).json({error: "User not found"})
+            return res.status(404).json({ error: 'User not found.' });
         }
-
-        await Cart.findOneAndDelete({userId: id})
-
-        return res.status(200).json({message: "User deleted successfully."})
-
-
+        await Cart.findOneAndDelete({ userId });
+        return res.status(200).json({ message: 'User account deleted successfully.' });
+    } catch (error) {
+        console.error('Error deleting user profile:', error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
-    catch (error) {
-        console.error("Error deleting user", error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
+};
 
 const getUserAddresses = async (req, res) => {
     try {
-        const id = req.params.id;
-
-        if (!id) {
-            return res.status(404).json({error: "ID not found"})
-        }
-
-        const user = await User.findById(id)
-
+        const userId = req.user.id;
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({error: "User not found"})
+            return res.status(404).json({ error: 'User not found.' });
         }
-
-        const formattedAddresses = user.addresses.map(address => ({
-            street: address.street,
-            city: address.city,
-            country: address.country,
-            zipCode: address.zipCode,
-        }))
-
-        return res.status(200).json(formattedAddresses)
+        return res.status(200).json(user.addresses);
+    } catch (error) {
+        console.error('Error fetching user addresses:', error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
-    catch (error) {
-        return res.status(500).json({ error: 'Internal server error' })
-    }
-}
+};
 
 const addUserAddress = async (req, res) => {
     try {
-        const id = req.params.id;
-        if (!id) {
-            return res.status(404).json({error: "ID not found"})
-        }
-
-        const {street, city, country, zipCode} = req.body;
+        const userId = req.user.id;
+        const { street, city, country, zipCode } = req.body;
 
         if (!street || !city || !country || !zipCode) {
-            return res.status(400).json({ error: "All address fields are required." });
+            return res.status(400).json({ error: 'All address fields are required.' });
         }
 
-        const user = await User.findById(id)
-
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({error: "User not found"})
+            return res.status(404).json({ error: 'User not found.' });
         }
 
-        const newAddress = {street, city, country, zipCode};
-        user.addresses.push(newAddress);
+        user.addresses.push({ street, city, country, zipCode });
+        await user.save();
 
-        await user.save()
-
-        return res.status(201).json({message: "Address added successfully."})
+        return res.status(201).json({ message: 'Address added successfully.' });
+    } catch (error) {
+        console.error('Error adding user address:', error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
-    catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
-    }
-}
+};
 
 const updateUserAddress = async (req, res) => {
     try {
-        const { id, addressId } = req.params;
+        const userId = req.user.id;
+        const { addressId } = req.params;
         const { street, city, country, zipCode } = req.body;
 
-        const user = await User.findById(id);
-
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found.' });
         }
 
         const address = user.addresses.id(addressId);
-
         if (!address) {
-            return res.status(404).json({ error: 'Address not found' });
+            return res.status(404).json({ error: 'Address not found.' });
         }
 
         if (street) address.street = street;
@@ -202,49 +141,46 @@ const updateUserAddress = async (req, res) => {
 
         await user.save();
 
-        res.status(200).json({ message: 'Address updated successfully', address });
+        return res.status(200).json({ message: 'Address updated successfully.', address });
     } catch (error) {
-        console.error("Error updating address", error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error updating user address:', error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
 };
 
 const deleteUserAddress = async (req, res) => {
     try {
-        const { id, addressId } = req.params;
+        const userId = req.user.id;
+        const { addressId } = req.params;
 
-        const user = await User.findById(id);
-
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found.' });
         }
 
-        const address = user.addresses.id(addressId);
-
-        if (!address) {
-            return res.status(404).json({ error: 'Address not found' });
+        const addressIndex = user.addresses.findIndex(address => address._id.toString() === addressId);
+        if (addressIndex === -1) {
+            return res.status(404).json({ error: 'Address not found.' });
         }
 
-        user.addresses.pull(addressId)
-
+        user.addresses.splice(addressIndex, 1);
         await user.save();
 
-        res.status(200).json({ message: 'Address deleted successfully' });
+        return res.status(200).json({ message: 'Address deleted successfully.' });
     } catch (error) {
-        console.error("Error deleting address", error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error deleting user address:', error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
 };
 
 
 module.exports = {
     registerUser,
-    getUserProfileById,
-    getAllUsers,
+    getUserProfile,
     updateUserProfile,
     deleteUserProfile,
     getUserAddresses,
     addUserAddress,
     updateUserAddress,
     deleteUserAddress,
-}
+};
