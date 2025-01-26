@@ -123,7 +123,6 @@ export default function Register() {
                     ))}
                 </div>
 
-                {/* Pole Email */}
                 <div>
                     <input
                         type="email"
@@ -143,7 +142,6 @@ export default function Register() {
                     )}
                 </div>
 
-                {/* Password i Confirm Password obok siebie */}
                 <div className="grid gap-4 md:grid-cols-2">
                     {["password", "confirmPassword"].map((field) => (
                         <div key={field}>

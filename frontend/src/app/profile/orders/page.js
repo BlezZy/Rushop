@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Button from "@/components/General/Button";
 import UserPanel from "@/components/General/UserPanel";
 
 export default function Orders() {
