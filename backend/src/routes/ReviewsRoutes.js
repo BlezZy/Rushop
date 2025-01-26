@@ -8,6 +8,6 @@ router.get('/', ReviewsController.getAllReviews);
 
 router.post('/', verifyToken, ReviewsController.addReview);
 
-router.delete('/:id', verifyToken, checkAdminPermission, ReviewsController.deleteReview);
+router.delete('/:id', verifyToken, ReviewsController.deleteReview);
 
 module.exports = router;

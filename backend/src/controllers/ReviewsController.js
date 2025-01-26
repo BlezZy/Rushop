@@ -21,15 +21,7 @@ const getAllReviews = async (req, res) => {
             }
         ]);
 
-        const reviews = await Review.find({ productId });
-
-        if (!reviews || reviews.length === 0) {
-            return res.status(404).json({
-                message: "No reviews found for this product.",
-                averageRating: null,
-                totalReviews: 0
-            });
-        }
+        const reviews = await Review.find({ productId }).populate('userId', 'firstName lastName');
 
         const { averageRating = 0, totalReviews = 0 } = aggregateResult[0] || {};
 
@@ -45,10 +37,16 @@ const getAllReviews = async (req, res) => {
 };
 
 
+
+
 const addReview = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id;
         const { productId, rating, comment } = req.body;
+
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized. Please log in." });
+        }
 
         if (!productId || !rating || !comment) {
             return res.status(400).json({ message: "Product ID, rating, and comment are required." });
@@ -69,26 +67,41 @@ const addReview = async (req, res) => {
     }
 };
 
+
 const deleteReview = async (req, res) => {
     try {
+        console.log('User making request:', req.user.id);
         const reviewId = req.params.id;
 
         if (!reviewId) {
             return res.status(400).json({ message: "Review ID is required." });
         }
 
-        const deletedReview = await Review.findByIdAndDelete(reviewId);
+        const reviewToDelete = await Review.findById(reviewId);
+        console.log('Review to delete:', reviewToDelete);
 
-        if (!deletedReview) {
+        if (!reviewToDelete) {
             return res.status(404).json({ message: "Review not found." });
         }
 
+        console.log('Review owner ID:', reviewToDelete.userId.toString());
+        console.log('Requesting user ID:', req.user.id);
+
+        if (reviewToDelete.userId.toString() !== req.user.id) {
+            return res.status(403).json({ message: "You are not authorized to delete this review." });
+        }
+
+        await Review.findByIdAndDelete(reviewId);
         return res.status(200).json({ message: "Review deleted successfully." });
     } catch (error) {
         console.error("Error deleting review:", error);
         return res.status(500).json({ error: "Internal server error." });
     }
 };
+
+
+
+
 
 module.exports = {
     getAllReviews,
