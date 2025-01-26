@@ -17,7 +17,7 @@ const AdminRoutes = require('./routes/AdminRoutes')
 const trimRequestBody = require('./middlewares/trimRequestBody');
 const CartRoutes = require('./routes/CartRoutes');
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.use(cors());
 app.use(express.json())
