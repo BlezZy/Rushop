@@ -39,6 +39,7 @@ const getAllReviews = async (req, res) => {
 
 
 
+
 const addReview = async (req, res) => {
     try {
         const userId = req.user?.id;
@@ -68,9 +69,10 @@ const addReview = async (req, res) => {
 };
 
 
+
+
 const deleteReview = async (req, res) => {
     try {
-        console.log('User making request:', req.user.id);
         const reviewId = req.params.id;
 
         if (!reviewId) {
@@ -78,26 +80,23 @@ const deleteReview = async (req, res) => {
         }
 
         const reviewToDelete = await Review.findById(reviewId);
-        console.log('Review to delete:', reviewToDelete);
-
         if (!reviewToDelete) {
             return res.status(404).json({ message: "Review not found." });
         }
-
-        console.log('Review owner ID:', reviewToDelete.userId.toString());
-        console.log('Requesting user ID:', req.user.id);
 
         if (reviewToDelete.userId.toString() !== req.user.id) {
             return res.status(403).json({ message: "You are not authorized to delete this review." });
         }
 
-        await Review.findByIdAndDelete(reviewId);
+        const deletedReview = await Review.findByIdAndDelete(reviewId);
+
         return res.status(200).json({ message: "Review deleted successfully." });
     } catch (error) {
         console.error("Error deleting review:", error);
         return res.status(500).json({ error: "Internal server error." });
     }
 };
+
 
 
 

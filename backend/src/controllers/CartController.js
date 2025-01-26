@@ -5,7 +5,7 @@ const getCart = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const cart = await Cart.findOne({ userId }).populate('items.productId', 'name price');
+        const cart = await Cart.findOne({ userId }).populate('items.productId', 'name price images');
 
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found.' });
@@ -13,9 +13,12 @@ const getCart = async (req, res) => {
 
         return res.status(200).json(cart);
     } catch (error) {
-        return res.status(500).json(error);
+        console.error('Error fetching cart:', error);
+        return res.status(500).json({ error: 'Internal server error.' });
     }
 };
+
+
 
 const addItemToCart = async (req, res) => {
     try {
